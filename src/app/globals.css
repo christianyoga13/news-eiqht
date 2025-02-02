@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: #000000;
+  font-family: 'Inter', sans-serif;
+}
+
+.menu-item a {
+  @apply relative; /* Properti untuk elemen induk */
+}
+
+.menu-item a::before {
+  @apply absolute bottom-0 left-0 w-full h-0.5 bg-black transform scale-x-0 transition-transform duration-300 ease-in-out origin-left;
+  content: ''; /* Menambah konten kosong */
+}
+
+.menu-item a:hover::before {
+  @apply scale-x-100; /* Mengubah skala elemen menjadi 1 (100%) */
+}
