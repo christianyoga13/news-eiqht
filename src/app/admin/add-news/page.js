@@ -1,5 +1,5 @@
 "use client";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -10,10 +10,28 @@ const AddNews = () => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [image, setImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState('');
   const [message, setMessage] = useState('');
 
+  useEffect(() => {
+    return () => {
+      if (imagePreview) {
+        URL.revokeObjectURL(imagePreview);
+      }
+    };
+  }, [imagePreview]);
+
   const handleImageChange = (e) => {
-    setImage(e.target.files[0]);
+    const file = e.target.files[0];
+    setImage(file);
+    
+    // Create preview URL for the selected image
+    if (file) {
+      const url = URL.createObjectURL(file);
+      setImagePreview(url);
+    } else {
+      setImagePreview('');
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -22,7 +40,7 @@ const AddNews = () => {
     let imageUrl = '';
     if (image) {
       const { data, error } = await supabase.storage
-        .from('news-images') // Pastikan nama bucket sesuai dengan yang Anda buat di Supabase
+        .from('news-images') 
         .upload(`public/${image.name}`, image);
 
       if (error) {
@@ -44,11 +62,12 @@ const AddNews = () => {
       setTitle('');
       setContent('');
       setImage(null);
+      setImagePreview(''); 
     }
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 pt-36">
       <h1 className="text-2xl font-bold mb-6">Add News</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
@@ -76,11 +95,21 @@ const AddNews = () => {
             type="file"
             onChange={handleImageChange}
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            accept="image/*"
           />
+          {imagePreview && (
+            <div className="mt-2">
+              <img
+                src={imagePreview}
+                alt="Preview"
+                className="max-w-xs h-auto rounded-lg shadow-md"
+              />
+            </div>
+          )}
         </div>
         <button
           type="submit"
-          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-black bg-gray-200 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
         >
           Add News
         </button>
