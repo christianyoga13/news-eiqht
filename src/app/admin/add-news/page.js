@@ -1,5 +1,4 @@
 "use client";
-
 import { useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
 
@@ -10,13 +9,33 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey);
 const AddNews = () => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+  const [image, setImage] = useState(null);
   const [message, setMessage] = useState('');
+
+  const handleImageChange = (e) => {
+    setImage(e.target.files[0]);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    let imageUrl = '';
+    if (image) {
+      const { data, error } = await supabase.storage
+        .from('news-images') // Pastikan nama bucket sesuai dengan yang Anda buat di Supabase
+        .upload(`public/${image.name}`, image);
+
+      if (error) {
+        setMessage('Error uploading image: ' + error.message);
+        return;
+      }
+
+      imageUrl = `${supabaseUrl}/storage/v1/object/public/news-images/public/${image.name}`;
+    }
+
     const { data, error } = await supabase
       .from('news')
-      .insert([{ title, content }]);
+      .insert([{ title, content, image_url: imageUrl }]);
 
     if (error) {
       setMessage('Error adding news: ' + error.message);
@@ -24,6 +43,7 @@ const AddNews = () => {
       setMessage('News added successfully!');
       setTitle('');
       setContent('');
+      setImage(null);
     }
   };
 
@@ -48,6 +68,14 @@ const AddNews = () => {
             onChange={(e) => setContent(e.target.value)}
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             required
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Image</label>
+          <input
+            type="file"
+            onChange={handleImageChange}
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           />
         </div>
         <button

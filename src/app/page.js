@@ -1,10 +1,20 @@
 "use client";
-
+import Link from 'next/link';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 import { useEffect, useState } from 'react';
 import { fetchNews } from '@/utils/supabase/client';
 
 export default function Home() {
   const [news, setNews] = useState([]);
+
+  useEffect(() => {
+    AOS.init({
+      duration: 1000,
+      once: true,
+      delay: 200,
+    });
+  }, []);
 
   useEffect(() => {
     async function getNews() {
@@ -20,27 +30,28 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-[6.875rem] font-bold mb-6 text-white ml-36">News</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <div className="container mx-auto px-4 py-8 cursor-none pt-28">
+      <h1 className="text-[6.875rem] font-bold mb-6 text-white ml-36" data-aos="fade-right">News</h1>
+      <div className="flex flex-col gap-10 cursor-none">
         {news.length === 0 ? (
           <p className="text-gray-500">No news available.</p>
         ) : (
           news.map((item) => (
-            <div 
-              key={item.id} 
-              className="bg-white bg-opacity-20 rounded-lg shadow-md hover:shadow-lg transition-shadow "
-              style={{ width: '100%', maxWidth: '560px', height: 'auto', maxHeight: '700px' }}
-            >
-              <div className="h-48 bg-gray-300 rounded-t-lg mb-6">
-                {/* Placeholder for image */}
+            <Link href={`/news/${item.id}`} key={item.id}>
+              <div 
+                className="shadow-md hover:shadow-lg transition-shadow cursor-pointer"
+                style={{ width: '100%', height: 'auto', maxHeight: '700px' }} data-aos="zoom-in"
+              >
+                <div className='container py-6 cursor-autp'>
+                  <small className='pl-6 text-white '>{new Date(item.created_at).toLocaleDateString()} - News</small>
+                  <h2 className='pl-6 text-white text-4xl font-bold mt-4'>{item.title}</h2>
+                  <p className='pl-6 pt-1 text-gray-500/70 text-sm'>
+                    {item.content.split(' ').slice(0, 50).join(' ')}...
+                  </p>
+                  <hr className='mt-8 border-t-2 border-gray-500/70' />
+                </div>
               </div>
-              <div className="p-6">
-                <h2 className="text-xl font-semibold mb-3 text-white">{item.title}</h2>
-                <p className="text-gray-500 mb-4">{item.content}</p>
-                <small className="text-gray-400">{new Date(item.created_at).toLocaleString()}</small>
-              </div>
-            </div>
+            </Link>
           ))
         )}
       </div>
