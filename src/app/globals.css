@@ -11,6 +11,10 @@
   }
 }
 
+html {
+  scroll-behavior: smooth !important;
+}
+
 body {
   cursor: none !important; 
   color: var(--foreground);
@@ -54,4 +58,17 @@ a, button, [role="button"], .pointer {
   pointer-events: none;
   z-index: 9998;
   transform: translate(-50%, -50%);
+}
+
+.sticky-title {
+  position: -webkit-sticky; /* For Safari */
+  position: sticky;
+  top: 0;
+  z-index: -10;
+  transition: opacity 0.5s ease-in-out;
+  opacity: 1;
+}
+
+.sticky-title.hidden {
+  opacity: 0;
 }

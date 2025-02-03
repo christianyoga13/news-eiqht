@@ -5,6 +5,18 @@ import React from 'react';
 const Footer = () => {
     return (
         <footer className="bg-black text-white py-16">
+            {/* Marquee Section */}
+            <div className="relative flex overflow-hidden mb-4">
+                <div className="flex whitespace-nowrap animate-marquee">
+                    {[...Array(12)].map((_, i) => (
+                        <span key={i} className="mx-4 text-6xl italic font-bold">
+                            NEWS
+                        </span>
+                    ))}
+                </div>
+            </div>
+
+            {/* Footer Content */}
             <div className="container mx-auto px-4">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     <div className="space-y-4">
@@ -22,26 +34,13 @@ const Footer = () => {
 
                     <div className="space-y-4">
                         <ul className="space-y-2">
-                            <li>
-                                <Link href="#" className="hover:text-gray-300 transition-colors">
-                                    Instagram
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="#" className="hover:text-gray-300 transition-colors">
-                                    Youtube
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="#" className="hover:text-gray-300 transition-colors">
-                                    Tiktok
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="#" className="hover:text-gray-300 transition-colors">
-                                    LinkedIn
-                                </Link>
-                            </li>
+                            {['Instagram', 'Youtube', 'Tiktok', 'LinkedIn'].map((platform, index) => (
+                                <li key={index}>
+                                    <Link href="#" className="hover:text-gray-300 transition-colors">
+                                        {platform}
+                                    </Link>
+                                </li>
+                            ))}
                         </ul>
                     </div>
 
