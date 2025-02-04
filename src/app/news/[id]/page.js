@@ -71,7 +71,7 @@ const NewsDetail = () => {
         </div>
       )}
       <div className="bg-black bg-opacity-20 rounded-lg shadow-md p-6">
-        <p className='text-2xl text-white mx-20 mb-10 mt-4'>{newsItem.content}</p>
+        <p className='text-xl text-white mx-12 mb-10 mt-4 text-justify'>{newsItem.content}</p>
       </div>
     </div>
   );
