@@ -8,7 +8,7 @@ export default function ClientWrapper({ children }) {
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
-    }, 7500);
+    }, 3500);
   }, []);
 
   return loading ? <PageLoader onComplete={() => setLoading(false)} /> : children;

@@ -16,12 +16,12 @@ export default function PageLoader({ onComplete }) {
           setReachedComplete(true);
           setTimeout(() => {
             setIsVisible(false);
-          }, 30000);
+          }, 1000);
           return 100;
         }
         return oldProgress < 100 ? oldProgress + 0.5 : 100;
       });
-    }, 30);
+    }, 10);
 
     return () => clearInterval(interval);
   }, [onComplete, reachedComplete]);
